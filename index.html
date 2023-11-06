@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat Application</title>
+</head>
+<body>
+    <h1>Chat</h1>
+    <div id="chat-box">
+        {% for message in chat_messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    </div>
+    <form id="chat-form">
+        <input type="text" id="message" placeholder="Type a message" required>
+        <button type="submit">Send</button>
+    </form>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var chatForm = document.querySelector('#chat-form');
+            var messageInput = document.querySelector('#message');
+            var chatBox = document.querySelector('#chat-box');
+
+            chatForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                var message = messageInput.value;
+                if (message) {
+                    chatBox.innerHTML += '<p>' + message + '</p>';
+                    messageInput.value = '';
+                    // Send the message to the server
+                    fetch('/send', {
+                        method: 'POST',
+                        body: new URLSearchParams({ 'message': message }),
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
